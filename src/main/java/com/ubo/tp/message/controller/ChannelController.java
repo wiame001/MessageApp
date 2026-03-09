@@ -68,15 +68,16 @@ public class ChannelController {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
 
-        if (choice == JOptionPane.YES_OPTION) {
+        /*if (choice == JOptionPane.YES_OPTION) {
             dataManager.deleteChannel(channel);
-        }
+        }*/
     }
 
-    public void removeUser(Channel channel, User user) {
+    /*public void removeUser(Channel channel, User user) {
 
         if(channel.getCreator().equals(session.getConnectedUser())) {
             dataManager.removeUserFromChannel(channel, user);
         }
     }
+         */
 }
