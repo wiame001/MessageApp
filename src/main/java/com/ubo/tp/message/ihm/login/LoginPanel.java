@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.login;
+package com.ubo.tp.message.ihm.login;
 
 import main.java.com.ubo.tp.message.controller.LoginController;
 

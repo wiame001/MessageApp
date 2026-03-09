@@ -6,7 +6,7 @@ import main.java.com.ubo.tp.message.controller.MessageController;
 import main.java.com.ubo.tp.message.controller.UserController;
 import main.java.com.ubo.tp.message.core.session.ISessionObserver;
 import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.login.LoginPanel;
+import com.ubo.tp.message.ihm.login.LoginPanel;
 
 import javax.swing.*;
 import java.awt.*;

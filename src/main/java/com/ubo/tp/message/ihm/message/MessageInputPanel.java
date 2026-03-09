@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.message;
+package com.ubo.tp.message.ihm.message;
 
 import main.java.com.ubo.tp.message.controller.MessageController;
 import javax.swing.*;

@@ -22,7 +22,7 @@ public class MessageApp {
 	/**
 	 * Vue principale de l'application.
 	 */
-	protected MessageAppMainView mMainView;
+	protected main.java.com.ubo.tp.message.ihm.MessageAppMainView mMainView;
 
 	/**
 	 * Constructeur.

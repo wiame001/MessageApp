@@ -9,7 +9,7 @@ import main.java.com.ubo.tp.message.datamodel.Channel;
 import main.java.com.ubo.tp.message.datamodel.Message;
 import main.java.com.ubo.tp.message.datamodel.User;
 import main.java.com.ubo.tp.message.ihm.canal.ChannelListPanel;
-import main.java.com.ubo.tp.message.ihm.message.MessageInputPanel;
+import com.ubo.tp.message.ihm.message.MessageInputPanel;
 import main.java.com.ubo.tp.message.ihm.message.MessagePanel;
 import main.java.com.ubo.tp.message.ihm.user.UserListPanel;
 
@@ -50,7 +50,10 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
         setLayout(new BorderLayout());
 
         // --- OUEST : Canaux ---
-        mChannelListPanel = new ChannelListPanel(mChannelController);
+        mChannelListPanel = new ChannelListPanel(
+                mChannelController,
+                this::setSelectedChannel
+        );
         mChannelListPanel.setPreferredSize(new Dimension(180, 0));
         add(mChannelListPanel, BorderLayout.WEST);
 
@@ -114,7 +117,6 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
     public void setSelectedChannel(Channel channel) {
         messageInputPanel.setRecipient(channel.getUuid());
     }
-
     @Override
     public void notifyMessageDeleted(Message message) {
         refreshMessages();
