@@ -1,0 +1,7 @@
+#
+#Wed Mar 04 15:16:07 CET 2026
+Date=1772633767587
+Recipient=bc7ec96e-e383-4074-ad1a-b998a6430479
+Sender=c0f9e560-176c-4187-a98d-c334a84854ac
+Text=HI\n
+UUID=b6bbcc2d-d169-4798-b45a-d82c174fb4db
