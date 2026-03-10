@@ -45,14 +45,25 @@ public class ChannelController {
     }
 
     public boolean canDeleteChannel(Channel channel) {
+
         User user = session.getConnectedUser();
-        return channel.getCreator().equals(user);
+
+        return channel.isPrivate()
+                && channel.getCreator().equals(user);
     }
 
     public void addUserToChannel(Channel channel, User user) {
 
+        if (!channel.isPrivate()) {
+            throw new IllegalStateException(
+                    "Impossible d'ajouter un utilisateur à un canal public."
+            );
+        }
+
         if (!channel.getCreator().equals(session.getConnectedUser())) {
-            throw new SecurityException("Seul le créateur peut modifier le canal.");
+            throw new SecurityException(
+                    "Seul le créateur peut modifier le canal."
+            );
         }
 
         channel.addUser(user);
@@ -62,16 +73,22 @@ public class ChannelController {
 
     public void removeUserFromChannel(Channel channel, User user) {
 
+        if (!channel.isPrivate()) {
+            throw new IllegalStateException(
+                    "Impossible de supprimer un utilisateur d'un canal public."
+            );
+        }
         if (!channel.getCreator().equals(session.getConnectedUser())) {
-            throw new SecurityException("Seul le créateur peut modifier le canal.");
+            throw new SecurityException(
+                    "Seul le créateur peut modifier le canal."
+            );
         }
-
         if (user.equals(channel.getCreator())) {
-            throw new IllegalArgumentException("Le créateur ne peut pas être supprimé.");
+            throw new IllegalArgumentException(
+                    "Le créateur ne peut pas être supprimé."
+            );
         }
-
         channel.removeUser(user);
-
         dataManager.modifyChannel(channel);
     }
 

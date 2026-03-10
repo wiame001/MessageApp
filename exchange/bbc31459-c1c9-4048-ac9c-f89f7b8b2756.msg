@@ -1,0 +1,7 @@
+#
+#Tue Mar 10 12:00:26 CET 2026
+Date=1773140426923
+Recipient=2300e8da-8f46-40fa-b472-6d72f35726e1
+Sender=c0f9e560-176c-4187-a98d-c334a84854ac
+Text=Hello \!
+UUID=bbc31459-c1c9-4048-ac9c-f89f7b8b2756
