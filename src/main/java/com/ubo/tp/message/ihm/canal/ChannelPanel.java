@@ -115,6 +115,37 @@ public class ChannelPanel extends JPanel {
 
         });
 
+        JMenuItem leaveItem = new JMenuItem("Quitter le canal");
+
+        leaveItem.setEnabled(controller.canLeaveChannel(channel));
+
+        leaveItem.addActionListener(e -> {
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Quitter le canal \"" + channel.getName() + "\" ?",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+
+                try {
+
+                    controller.leaveChannel(channel);
+
+                } catch (Exception ex) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            ex.getMessage(),
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+        menu.add(leaveItem);
         menu.add(editItem);
         menu.add(itemSupprimer);
         menu.show(this, x, y);

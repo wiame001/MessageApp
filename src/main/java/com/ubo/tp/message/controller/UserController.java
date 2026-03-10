@@ -24,28 +24,50 @@ public class UserController {
         return dataManager.getUser(tag);
     }
 
+    public void deleteAccount() {
+
+        User connected = session.getConnectedUser();
+
+        if (connected != null) {
+
+            connected.setOnline(false);
+
+            dataManager.deleteUser(connected);
+
+            session.disconnect();
+        }
+    }
+
     public String updateName(String newName) {
 
-        if (newName == null || newName.isEmpty()) {
+        if (newName == null || newName.trim().isEmpty()) {
             return "Nom invalide.";
         }
 
         User connected = session.getConnectedUser();
 
-        connected.setName(newName);
+        connected.setName(newName.trim());
+
         dataManager.modifyUser(connected.getUuid(), connected);
 
         return "SUCCESS";
     }
 
-    public void deleteAccount() {
+    public Session getSession() {
+        return session;
+    }
+
+    public void logout() {
 
         User connected = session.getConnectedUser();
 
-        dataManager.deleteUser(connected);
+        if (connected != null) {
 
-        session.disconnect();
+            connected.setOnline(false);
+
+            dataManager.modifyUser(connected.getUuid(), connected);
+
+            session.disconnect();
+        }
     }
-
-
 }

@@ -77,4 +77,33 @@ public class ChannelController {
     public Set<User> getAllUsers() {
         return dataManager.getUsers();
     }
+
+    public void leaveChannel(Channel channel) {
+
+        User connected = session.getConnectedUser();
+
+        if (channel.getCreator().equals(connected)) {
+            throw new IllegalStateException(
+                    "Le créateur ne peut pas quitter son canal."
+            );
+        }
+
+        if (!channel.isPrivate()) {
+            throw new IllegalStateException(
+                    "Impossible de quitter un canal public."
+            );
+        }
+
+        channel.removeUser(connected);
+
+        dataManager.modifyChannel(channel);
+    }
+    public boolean canLeaveChannel(Channel channel) {
+
+        User connected = session.getConnectedUser();
+
+        return channel.isPrivate()
+                && !channel.getCreator().equals(connected)
+                && channel.containsUser(connected);
+    }
 }

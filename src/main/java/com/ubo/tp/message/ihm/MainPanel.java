@@ -1,6 +1,7 @@
 package main.java.com.ubo.tp.message.ihm;
 
 import main.java.com.ubo.tp.message.controller.ChannelController;
+import main.java.com.ubo.tp.message.controller.LoginController;
 import main.java.com.ubo.tp.message.controller.MessageController;
 import main.java.com.ubo.tp.message.controller.UserController;
 import main.java.com.ubo.tp.message.core.DataManager;
@@ -32,6 +33,7 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
     private UUID currentPrivateRecipient;
     private UUID myUserId;
     private JTextField messageSearchField;
+    private JLabel connectedUserLabel;
 
     public MainPanel(User user, MessageController msgCtrl, UserController userCtrl, ChannelController chanCtrl, DataManager dataManager) {
         this.mMessageController = msgCtrl;
@@ -52,23 +54,22 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
     }
 
     private void initComponents(User user) {
+
         setLayout(new BorderLayout());
 
-        // --- OUEST : Canaux ---
-        mChannelListPanel = new ChannelListPanel(
-                mChannelController,
-                this::setSelectedChannel
-        );
-        mChannelListPanel.setPreferredSize(new Dimension(180, 0));
-        add(mChannelListPanel, BorderLayout.WEST);
+        // ===== BARRE UTILISATEUR =====
+        JPanel userBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        // --- EST : Utilisateurs ---
-        mUserListPanel = new UserListPanel(
-                mUserController,
-                this::setSelectedUser
-        );        mUserListPanel.setPreferredSize(new Dimension(180, 0));
-        add(mUserListPanel, BorderLayout.EAST);
+        JButton btnEditName = new JButton("Modifier nom");
+        JButton btnDelete = new JButton("Supprimer compte");
+        JButton btnLogout = new JButton("Déconnexion");
 
+        connectedUserLabel = new JLabel("Connecté : " + user.getName());
+        userBar.add(connectedUserLabel);        userBar.add(btnEditName);
+        userBar.add(btnDelete);
+        userBar.add(btnLogout);
+
+        // ===== BARRE RECHERCHE MESSAGE =====
         messageSearchField = new JTextField();
         messageSearchField.putClientProperty("JTextField.placeholderText", "Rechercher un message...");
 
@@ -80,14 +81,83 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
 
         });
 
-        add(messageSearchField, BorderLayout.NORTH);
-        // --- CENTRE : Messages ---
+        // ===== PANEL HAUT =====
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(userBar, BorderLayout.NORTH);
+        topPanel.add(messageSearchField, BorderLayout.SOUTH);
+
+        add(topPanel, BorderLayout.NORTH);
+
+        // ===== ACTIONS BOUTONS =====
+        btnEditName.addActionListener(e -> {
+
+            String newName = JOptionPane.showInputDialog(this, "Nouveau nom :");
+
+            if (newName != null) {
+
+                String result = mUserController.updateName(newName);
+
+                if (!result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(this, result);
+                } else {
+
+                    connectedUserLabel.setText(
+                            "Connecté : " +
+                                    mUserController.getSession().getConnectedUser().getName()
+                    );
+
+                    mChannelListPanel.refreshList();
+                }
+            }
+        });
+
+        btnDelete.addActionListener(e -> {
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Supprimer votre compte ?",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                mUserController.deleteAccount();
+            }
+        });
+
+        btnLogout.addActionListener(e -> {
+            mUserController.logout();
+        });
+
+        // ===== CANAUX (OUEST) =====
+        mChannelListPanel = new ChannelListPanel(
+                mChannelController,
+                this::setSelectedChannel
+        );
+
+        mChannelListPanel.setPreferredSize(new Dimension(180, 0));
+
+        add(mChannelListPanel, BorderLayout.WEST);
+
+        // ===== UTILISATEURS (EST) =====
+        mUserListPanel = new UserListPanel(
+                mUserController,
+                this::setSelectedUser
+        );
+
+        mUserListPanel.setPreferredSize(new Dimension(180, 0));
+
+        add(mUserListPanel, BorderLayout.EAST);
+
+        // ===== MESSAGES (CENTRE) =====
         mMessagesListPanel = new JPanel();
         mMessagesListPanel.setLayout(new BoxLayout(mMessagesListPanel, BoxLayout.Y_AXIS));
+
         add(new JScrollPane(mMessagesListPanel), BorderLayout.CENTER);
 
-        // --- BAS : Saisie ---
+        // ===== SAISIE MESSAGE (BAS) =====
         messageInputPanel = new MessageInputPanel(mMessageController);
+
         add(messageInputPanel, BorderLayout.SOUTH);
     }
 
@@ -193,7 +263,9 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
     }
 
     @Override
-    public void notifyChannelModified(Channel modifiedChannel) {}
+    public void notifyChannelModified(Channel channel) {
+        mChannelListPanel.refreshList();
+    }
 
     @Override
     public void notifyMessageModified(Message modifiedMessage) {}

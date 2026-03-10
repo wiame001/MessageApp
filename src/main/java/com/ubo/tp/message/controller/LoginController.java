@@ -60,4 +60,17 @@ public class LoginController {
 
         return "SUCCESS";
     }
+    public void logout() {
+
+        User connected = session.getConnectedUser();
+
+        if (connected != null) {
+
+            connected.setOnline(false);
+
+            dataManager.modifyUser(connected.getUuid(), connected);
+
+            session.disconnect();
+        }
+    }
 }
