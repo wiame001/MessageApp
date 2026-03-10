@@ -245,4 +245,19 @@ public class DataManager {
 	public void deleteUser(User user) {
 		//mEntityManager.deleteUserFile(user);
 	}
+	/**
+	 * Supprime un canal.
+	 * À ajouter dans DataManager.java
+	 */
+	public void deleteChannel(Channel channel) {
+		this.mEntityManager.deleteChannelFile(channel);
+	}
+
+	/**
+	 * Modifie un canal existant (ex: ajout/suppression d'un membre).
+	 * À ajouter dans DataManager.java
+	 */
+	public void modifyChannel(Channel channel) {
+		this.mEntityManager.writeChannelFile(channel);
+	}
 }

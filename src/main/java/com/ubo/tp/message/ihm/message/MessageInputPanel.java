@@ -9,11 +9,11 @@ public class MessageInputPanel extends JPanel {
     private JTextArea messageArea;
     private JButton sendButton;
     private MessageController controller;
-    private UUID currentRecipient; // Un canal ou un utilisateur
+    private UUID currentRecipient;
 
     public MessageInputPanel(MessageController controller) {
         this.controller = controller;
-        this.currentRecipient = UUID.randomUUID(); // Par défaut, ou à définir via un setter
+        this.currentRecipient = null;
         initComponents();
     }
 
@@ -27,8 +27,17 @@ public class MessageInputPanel extends JPanel {
 
         sendButton = new JButton("Envoyer");
         sendButton.addActionListener(e -> {
+            if (currentRecipient == null) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Veuillez sélectionner un canal.",
+                        "Erreur",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
             controller.sendMessage(messageArea.getText(), currentRecipient);
-            messageArea.setText(""); // Reset après envoi
+            messageArea.setText("");
         });
 
         add(new JScrollPane(messageArea), BorderLayout.CENTER);

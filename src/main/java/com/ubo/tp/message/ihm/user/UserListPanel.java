@@ -10,9 +10,11 @@ public class UserListPanel extends JPanel {
     private final UserController controller;
     private JPanel    listContainer;
     private JTextField searchField;
+    private final UserSelectionListener selectionListener;
 
-    public UserListPanel(UserController controller) {
+    public UserListPanel(UserController controller, UserSelectionListener listener) {
         this.controller = controller;
+        this.selectionListener = listener;
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("Utilisateurs enregistrés"));
 
@@ -38,7 +40,7 @@ public class UserListPanel extends JPanel {
         listContainer.removeAll();
         Set<User> users = controller.getAllUsers();
         for (User user : users) {
-            listContainer.add(new UserPanel(user));
+            listContainer.add(new UserPanel(user, selectionListener));
         }
         listContainer.revalidate();
         listContainer.repaint();

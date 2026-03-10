@@ -18,9 +18,22 @@ public class MessageController {
      * Logique d'envoi de message : crée l'objet et demande au model (DataManager) d'écrire le fichier.
      */
     public void sendMessage(String text, UUID recipientUuid) {
-        if (text != null && !text.trim().isEmpty() && text.length() <= 200) {
-            Message newMessage = new Message(session.getConnectedUser(), recipientUuid, text);
-            dataManager.sendMessage(newMessage);
+
+        if (session.getConnectedUser() == null) {
+            return;
         }
+
+        if (text == null || text.trim().isEmpty()) {
+            return;
+        }
+
+        if (text.length() > 200) {
+            throw new IllegalArgumentException("Un message ne peut pas dépasser 200 caractères.");
+        }
+
+        Message newMessage =
+                new Message(session.getConnectedUser(), recipientUuid, text.trim());
+
+        dataManager.sendMessage(newMessage);
     }
 }

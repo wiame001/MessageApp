@@ -1,0 +1,7 @@
+#
+#Tue Mar 10 08:18:45 CET 2026
+Date=1773127125646
+Recipient=c0f9e560-176c-4187-a98d-c334a84854ac
+Sender=5ff2635b-7519-4a6a-a245-611e80cfda98
+Text=bonjour
+UUID=48df178b-60cd-4e83-96e0-d1ca2a54da59

@@ -34,11 +34,47 @@ public class ChannelController {
         dataManager.sendChannel(channel);
     }
 
+    public void deleteChannel(Channel channel) {
+        if (!canDeleteChannel(channel)) {
+            throw new SecurityException(
+                    "Vous ne pouvez supprimer que les canaux dont vous êtes le créateur."
+            );
+        }
+        dataManager.deleteChannel(channel);
+    }
+
     public boolean canDeleteChannel(Channel channel) {
-
         User user = session.getConnectedUser();
-
         return channel.getCreator().equals(user);
     }
 
+    public void addUserToChannel(Channel channel, User user) {
+
+        if (!channel.getCreator().equals(session.getConnectedUser())) {
+            throw new SecurityException("Seul le créateur peut modifier le canal.");
+        }
+
+        channel.addUser(user);
+
+        dataManager.modifyChannel(channel);
+    }
+
+    public void removeUserFromChannel(Channel channel, User user) {
+
+        if (!channel.getCreator().equals(session.getConnectedUser())) {
+            throw new SecurityException("Seul le créateur peut modifier le canal.");
+        }
+
+        if (user.equals(channel.getCreator())) {
+            throw new IllegalArgumentException("Le créateur ne peut pas être supprimé.");
+        }
+
+        channel.removeUser(user);
+
+        dataManager.modifyChannel(channel);
+    }
+
+    public Set<User> getAllUsers() {
+        return dataManager.getUsers();
+    }
 }

@@ -1,0 +1,7 @@
+#
+#Tue Mar 10 08:42:58 CET 2026
+Date=1773128578285
+Recipient=5ff2635b-7519-4a6a-a245-611e80cfda98
+Sender=c0f9e560-176c-4187-a98d-c334a84854ac
+Text=TEST
+UUID=2dc84dbb-29f5-4e1c-8e99-2fee48a2863d

@@ -266,8 +266,7 @@ public class DataFilesManager {
 
 		Iterator<User> iterator = users.iterator();
 		while (iterator.hasNext()) {
-			usersAsString += iterator.next();
-
+			usersAsString += iterator.next().getUuid();
 			if (iterator.hasNext()) {
 				usersAsString += USER_SEPARATOR;
 			}
@@ -302,5 +301,13 @@ public class DataFilesManager {
 	public static String decrypt(String encryptedData) {
 		byte[] decodedBytes = Base64.getDecoder().decode(encryptedData);
 		return new String(decodedBytes);
+	}
+	public void deleteChannelFile(Channel channel) {
+		File channelFile = new File(
+				getFileName(channel.getUuid(), Constants.CHANNEL_FILE_EXTENSION)
+		);
+		if (channelFile.exists()) {
+			channelFile.delete();
+		}
 	}
 }

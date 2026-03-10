@@ -7,8 +7,19 @@ import java.awt.*;
 public class UserPanel extends JPanel {
     private final User user;
 
-    public UserPanel(User user) {
+    public UserPanel(User user, UserSelectionListener listener) {
         this.user = user;
+
+        addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+
+                if (listener != null) {
+                    listener.onUserSelected(user);
+                }
+            }
+        });
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
         setBackground(Color.WHITE);
@@ -36,10 +47,15 @@ public class UserPanel extends JPanel {
         add(lblTag, gbc);
 
         // Indicateur en ligne (CHN-010)
-        JLabel lblOnline = new JLabel("🟢");  // ou "⚫" si hors ligne
-        lblOnline.setToolTipText("En ligne");
-        // Pour l'instant tous "en ligne" car pas de système de présence
-        // À connecter à un vrai statut quand disponible
+        JLabel lblOnline;
+
+        if (user.isOnline()) {
+            lblOnline = new JLabel("🟢");
+            lblOnline.setToolTipText("En ligne");
+        } else {
+            lblOnline = new JLabel("⚫");
+            lblOnline.setToolTipText("Hors ligne");
+        }
         gbc.gridx = 2; gbc.gridy = 0; gbc.gridheight = 2;
         gbc.weightx = 0;
         add(lblOnline, gbc);

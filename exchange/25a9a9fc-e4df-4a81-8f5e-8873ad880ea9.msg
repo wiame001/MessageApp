@@ -1,0 +1,7 @@
+#
+#Tue Mar 10 08:30:45 CET 2026
+Date=1773127845398
+Recipient=c0f9e560-176c-4187-a98d-c334a84854ac
+Sender=5ff2635b-7519-4a6a-a245-611e80cfda98
+Text=hi
+UUID=25a9a9fc-e4df-4a81-8f5e-8873ad880ea9
