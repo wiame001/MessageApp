@@ -21,16 +21,17 @@ public class ChannelController {
         return dataManager.getChannels();
     }
 
-    public void createChannel(String channelName) {
+    public void createChannel(String channelName, boolean isPrivate) {
 
         if (channelName == null || channelName.trim().isEmpty()) {
             throw new IllegalArgumentException("Le nom du canal est vide");
         }
-
         User creator = session.getConnectedUser();
-
         Channel channel = new Channel(creator, channelName.trim());
-
+        channel.setPrivate(isPrivate);
+        if (isPrivate) {
+            channel.addUser(creator); // créateur membre du canal
+        }
         dataManager.sendChannel(channel);
     }
 
@@ -105,5 +106,17 @@ public class ChannelController {
         return channel.isPrivate()
                 && !channel.getCreator().equals(connected)
                 && channel.containsUser(connected);
+    }
+
+    public boolean canSeeChannel(Channel channel) {
+
+        User user = session.getConnectedUser();
+
+        if (!channel.isPrivate()) {
+            return true;
+        }
+
+        return channel.getCreator().equals(user)
+                || channel.containsUser(user);
     }
 }

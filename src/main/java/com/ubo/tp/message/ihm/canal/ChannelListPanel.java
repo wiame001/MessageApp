@@ -15,56 +15,81 @@ public class ChannelListPanel extends JPanel {
     private JTextField searchField;
 
     public ChannelListPanel(ChannelController controller, ChannelSelectionListener listener) {
+
         this.controller = controller;
         this.selectionListener = listener;
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("Canaux"));
 
+        // ===== PANEL HAUT =====
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
-        // Bouton "+"
-        JButton createButton = new JButton("+");
-        createButton.addActionListener(e -> {
-            String name = JOptionPane.showInputDialog(
-                    this,
-                    "Nom du canal :",
-                    "Créer un canal",
-                    JOptionPane.PLAIN_MESSAGE
-            );
-            if (name != null) {
-                try {
-                    controller.createChannel(name);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(
-                            this, ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE
-                    );
-                }
-            }
-        });
-        add(createButton, BorderLayout.NORTH);
+        // ===== RECHERCHE =====
         searchField = new JTextField();
         searchField.putClientProperty("JTextField.placeholderText", "Rechercher un canal...");
 
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                filterList();
-            }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterList(); }
 
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                filterList();
-            }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterList(); }
 
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                filterList();
-            }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterList(); }
 
         });
 
-        add(searchField, BorderLayout.NORTH);
-        // Liste
+        // ===== BOUTON + =====
+        JButton createButton = new JButton("+");
+
+        createButton.addActionListener(e -> {
+
+            JTextField nameField = new JTextField();
+            JCheckBox privateBox = new JCheckBox("Canal privé");
+
+            Object[] message = {
+                    "Nom du canal :", nameField,
+                    privateBox
+            };
+
+            int option = JOptionPane.showConfirmDialog(
+                    this,
+                    message,
+                    "Créer un canal",
+                    JOptionPane.OK_CANCEL_OPTION
+            );
+
+            if (option == JOptionPane.OK_OPTION) {
+
+                String name = nameField.getText();
+                boolean isPrivate = privateBox.isSelected();
+
+                try {
+                    controller.createChannel(name, isPrivate);
+                }
+                catch (Exception ex) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            ex.getMessage(),
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+
+        // Ajouter dans topPanel
+        topPanel.add(searchField);
+        topPanel.add(createButton);
+
+        add(topPanel, BorderLayout.NORTH);
+
+        // ===== LISTE CANAUX =====
         listContainer = new JPanel();
         listContainer.setLayout(new BoxLayout(listContainer, BoxLayout.Y_AXIS));
+
         add(new JScrollPane(listContainer), BorderLayout.CENTER);
 
         refreshList();
@@ -90,13 +115,20 @@ public class ChannelListPanel extends JPanel {
         listContainer.revalidate();
         listContainer.repaint();
     }
+
     public void refreshList() {
+
         listContainer.removeAll();
 
         for (Channel channel : controller.getAllChannels()) {
-            // On passe maintenant aussi le controller pour le menu contextuel
-            ChannelPanel panel = new ChannelPanel(channel, selectionListener, controller);
-            listContainer.add(panel);
+
+            if (controller.canSeeChannel(channel)) {
+
+                ChannelPanel panel =
+                        new ChannelPanel(channel, selectionListener, controller);
+
+                listContainer.add(panel);
+            }
         }
 
         listContainer.revalidate();
