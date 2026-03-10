@@ -310,4 +310,15 @@ public class DataFilesManager {
 			channelFile.delete();
 		}
 	}
+
+	public void deleteMessageFile(Message message) {
+
+		File messageFile = new File(
+				getFileName(message.getUuid(), Constants.MESSAGE_FILE_EXTENSION)
+		);
+
+		if (messageFile.exists()) {
+			messageFile.delete();
+		}
+	}
 }

@@ -188,8 +188,9 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
                         msg.getRecipient().equals(currentChannel) &&
                         msg.getText().toLowerCase().contains(query)) {
 
-                    mMessagesListPanel.add(new MessagePanel(msg));
-                }
+                    mMessagesListPanel.add(
+                            new MessagePanel(msg, mMessageController)
+                    );                }
 
                 // ---- Messages privés ----
                 else if (currentPrivateRecipient != null) {
@@ -205,7 +206,9 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
                     if ((sentByMe || sentToMe) &&
                             msg.getText().toLowerCase().contains(query)) {
 
-                        mMessagesListPanel.add(new MessagePanel(msg));
+                        mMessagesListPanel.add(
+                                new MessagePanel(msg, mMessageController)
+                        );
                     }
                 }
             }

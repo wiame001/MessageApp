@@ -260,4 +260,10 @@ public class DataManager {
 	public void modifyChannel(Channel channel) {
 		this.mEntityManager.writeChannelFile(channel);
 	}
+
+	public void deleteMessage(Message message) {
+
+		mEntityManager.deleteMessageFile(message);
+
+	}
 }
