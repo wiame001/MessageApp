@@ -221,7 +221,34 @@ public class MainPanel extends JPanel implements IDatabaseObserver {
 
     @Override
     public void notifyMessageAdded(Message message) {
-        refreshMessages(); // On rafraîchit quand un message arrive
+
+        refreshMessages();
+
+        User connectedUser = mUserController
+                .getSession()
+                .getConnectedUser();
+        // ===== MESSAGE PRIVÉ =====
+        if (message.getRecipient().equals(connectedUser.getUuid())
+                && !message.getSender().equals(connectedUser)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Message privé de @" + message.getSender().getUserTag(),
+                    "Nouveau message",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+        // ===== MENTION =====
+        String mention = "@" + connectedUser.getUserTag();
+        if (message.getText().contains(mention)
+                && !message.getSender().equals(connectedUser)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Vous avez été mentionné dans un message !",
+                    "Mention",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
     }
 
     @Override

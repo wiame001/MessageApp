@@ -1,0 +1,7 @@
+#
+#Tue Mar 10 15:08:39 CET 2026
+Date=1773151719831
+Recipient=c0f9e560-176c-4187-a98d-c334a84854ac
+Sender=5ff2635b-7519-4a6a-a245-611e80cfda98
+Text=@zr \!
+UUID=0df56054-5a94-42a3-bb96-d03b06c291ee
