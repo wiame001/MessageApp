@@ -1,7 +1,7 @@
 package main.java.com.ubo.tp.message.ihm;
 
 import java.io.File;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 import main.java.com.ubo.tp.message.core.DataManager;
 import main.java.com.ubo.tp.message.core.session.Session;
@@ -77,7 +77,24 @@ public class MessageApp {
 	 * pouvoir utiliser l'application</b>
 	 */
 	protected void initDirectory() {
-		// Ne rien faire ici - le répertoire sera choisi via le menu
+		JFileChooser directoryChooser = new JFileChooser();
+		directoryChooser.setDialogTitle("Choisir le répertoire d'échange");
+		directoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		int result = directoryChooser.showOpenDialog(null);
+
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File selectedDirectory = directoryChooser.getSelectedFile();
+			if (isValidExchangeDirectory(selectedDirectory)) {
+				mDataManager.setExchangeDirectory(selectedDirectory.getAbsolutePath());
+				System.out.println("Répertoire d'échange sélectionné : " + selectedDirectory.getAbsolutePath());
+			} else {
+				JOptionPane.showMessageDialog(null, "Le répertoire sélectionné n'est pas valide.");
+			}
+		} else {
+			// L'utilisateur a annulé la sélection du répertoire
+			JOptionPane.showMessageDialog(null, "Aucun répertoire sélectionné.");
+		}
 	}
 
 	/**
